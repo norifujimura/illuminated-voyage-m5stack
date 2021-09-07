@@ -4,6 +4,10 @@
 bool updateColor;
 String lastColor;
 
+//FPS
+unsigned long now = 0;
+unsigned long last = 0;
+
 //BT
 //#include <BLEDevice.h>
 //bool deviceConnected = false;
@@ -21,14 +25,30 @@ void setup(){
   initLCDcolor();
   
   M5.Lcd.println("Done");
+  if(last == 0){
+    last = millis();
+  }
 }
 
 // the loop routine runs over and over again forever
 void loop() {
   M5.update();
+  showFps();
+  loopBLE();
   loopBLE();
   loopLCDcolor();
+  checkBleMessage();
   showBatteryLevel();
+}
+
+void showFps(){
+  now = millis();
+  int diff = now - last;
+  float fps = 1000.0 / (float) diff;
+  String s = String("FPS:")+String(fps).c_str();
+  M5.Lcd.setCursor(0, 240-40);
+  M5.Lcd.print(s);
+  last = now;
 }
 
 void showBatteryLevel(){
@@ -41,7 +61,25 @@ void showBatteryLevel(){
   M5.Lcd.setCursor(0, 240-20);
   M5.Lcd.print(s);
   M5.Lcd.progressBar(0, 240-10, 320, 20, i); 
+}
 
+void checkBleMessage(){
+  String cmd = getBleMessage();
+  if (cmd == "RED"){
+    // RED
+    lastColor = "RED";
+    updateColor = true;
+  }
+  if (cmd == "YELLOW"){
+    // YELLOW
+    lastColor = "YELLOW";
+    updateColor = true;
+  }
+  if (cmd == "BLUE"){
+    // BLUE
+    lastColor = "BLUE";
+    updateColor = true;
+  }
 }
 
 ///////////////
@@ -86,7 +124,6 @@ void loopLCDcolor() {
     }
     if (isBleDeviceConnected()) {
       sendBleMessage(lastColor);
-
     }
     updateColor = false;
   }

@@ -12,6 +12,8 @@ BLEServer *pServer = NULL;
 BLECharacteristic * pNotifyCharacteristic;
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
+bool messageReceived = false;
+String message;
 
 #define LOCAL_NAME                  "M5Stack-Color"
 // See the following for generating UUIDs:
@@ -39,6 +41,9 @@ class MyCallbacks: public BLECharacteristicCallbacks {
         String cmd = String(rxValue.c_str());
         Serial.print("Received Value: ");
         Serial.println(cmd);
+        message = cmd;
+        messageReceived = true;
+        /*
         if (cmd == "RED")
         {
           // RED
@@ -57,6 +62,7 @@ class MyCallbacks: public BLECharacteristicCallbacks {
           lastColor = "BLUE";
           updateColor = true;
         }
+        */
       }
     }
 };
@@ -121,4 +127,14 @@ void sendBleMessage(String message){
   message.toCharArray(sendMessage, 10);
   pNotifyCharacteristic->setValue(sendMessage);
   pNotifyCharacteristic->notify();
+}
+
+
+String getBleMessage(){
+  if(messageReceived){
+    messageReceived = false;
+    return message;
+  }else{
+    return "";
+  }
 }
