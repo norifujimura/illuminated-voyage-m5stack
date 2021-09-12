@@ -12,13 +12,16 @@ unsigned long last = 0;
 //#include <BLEDevice.h>
 //bool deviceConnected = false;
 //BLECharacteristic * pNotifyCharacteristic;
+//BT-FPS
+unsigned long btNow = 0;
+unsigned long btLast = 0;
 
 // the setup routine runs once when M5Stack starts up
 void setup(){
 
   // Initialize the M5Stack object
   M5.begin();
-  M5.Lcd.setTextSize(1);
+  M5.Lcd.setTextSize(2);
   M5.Lcd.print("Setup....");
   
   initBLE();
@@ -35,20 +38,33 @@ void loop() {
   M5.update();
   showFps();
   loopBLE();
-  loopBLE();
-  loopLCDcolor();
+
+  //loopLCDcolor();
   checkBleMessage();
   showBatteryLevel();
+  showBtFps();
 }
 
 void showFps(){
+  last = now;
   now = millis();
   int diff = now - last;
   float fps = 1000.0 / (float) diff;
-  String s = String("FPS:")+String(fps).c_str();
-  M5.Lcd.setCursor(0, 240-40);
+  int ifps = (int)fps;
+  String s = String("FPS:")+String(ifps).c_str()+String("fps  ");
+  M5.Lcd.setCursor(0, 240-60);
+  M5.Lcd.setTextSize(2);
   M5.Lcd.print(s);
-  last = now;
+}
+
+void showBtFps(){
+  int diff = btNow - btLast;
+  float fps = 1000.0 / (float) diff;
+  int ifps = (int)fps;
+  String s = String("BT FPS:")+String(ifps).c_str()+String("fps                       ");
+  M5.Lcd.setCursor(0, 240-90);
+  M5.Lcd.setTextSize(2);
+  M5.Lcd.print(s);
 }
 
 void showBatteryLevel(){
@@ -58,13 +74,39 @@ void showBatteryLevel(){
   String s = String("Battery:")+String(batPercentage ).c_str()+String("%");
    //M5.Lcd.drawString(s, 0, 100, 1); 
   int i = (int) batPercentage;
-  M5.Lcd.setCursor(0, 240-20);
+  M5.Lcd.setCursor(0, 240-30);
+  M5.Lcd.setTextSize(2);
   M5.Lcd.print(s);
   M5.Lcd.progressBar(0, 240-10, 320, 20, i); 
 }
 
 void checkBleMessage(){
+
+  //r
   String cmd = getBleMessage();
+  if(cmd != ""){
+    btLast = btNow;
+    btNow = millis();
+  }
+  M5.Lcd.setCursor(0, 240-120);
+  M5.Lcd.setTextSize(3);
+  M5.Lcd.print(cmd);
+
+  //t
+  
+  if (isBleDeviceConnected()) {
+    if (M5.BtnA.wasPressed()){
+      sendBleMessage("A");
+    }
+    if (M5.BtnB.wasPressed()){
+      sendBleMessage("B");
+    }
+    if (M5.BtnC.wasPressed()){
+      sendBleMessage("C");
+    }
+  }
+
+  /*
   if (cmd == "RED"){
     // RED
     lastColor = "RED";
@@ -80,6 +122,7 @@ void checkBleMessage(){
     lastColor = "BLUE";
     updateColor = true;
   }
+  */
 }
 
 ///////////////
