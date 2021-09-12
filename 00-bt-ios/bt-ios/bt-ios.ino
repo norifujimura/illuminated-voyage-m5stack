@@ -1,8 +1,10 @@
 #include <M5Core2.h>
 
 ///////////////
-bool updateColor;
-String lastColor;
+//bool updateColor;
+//String lastColor;
+int num = 0;
+TouchPoint_t touch;
 
 //FPS
 unsigned long now = 0;
@@ -25,7 +27,7 @@ void setup(){
   M5.Lcd.print("Setup....");
   
   initBLE();
-  initLCDcolor();
+  //initLCDcolor();
   
   M5.Lcd.println("Done");
   if(last == 0){
@@ -36,6 +38,8 @@ void setup(){
 // the loop routine runs over and over again forever
 void loop() {
   M5.update();
+  //M5.Lcd.clear(); 
+  //M5.Lcd.fillScreen(BLACK);  
   showFps();
   loopBLE();
 
@@ -43,6 +47,14 @@ void loop() {
   checkBleMessage();
   showBatteryLevel();
   showBtFps();
+  showLines();
+
+  if(M5.Touch.ispressed()) {
+    //Serial.println("Pressed");
+    touch = M5.Touch.getPressPoint();
+    int x =  255.0 /320.0 * touch.x;
+    sendBleMessage(String(x));
+  }
 }
 
 void showFps(){
@@ -80,6 +92,13 @@ void showBatteryLevel(){
   M5.Lcd.progressBar(0, 240-10, 320, 20, i); 
 }
 
+void showLines(){
+  int x = 320.0 / 255.0 * num;
+  M5.Lcd.fillRect(0, 20, 320, 100, BLACK);
+  M5.Lcd.drawFastVLine(x, 20, 100,LIGHTGREY); 
+  M5.Lcd.drawFastVLine(touch.x, 20, 100,DARKGREY); 
+}
+
 void checkBleMessage(){
 
   //r
@@ -87,10 +106,12 @@ void checkBleMessage(){
   if(cmd != ""){
     btLast = btNow;
     btNow = millis();
+    M5.Lcd.setCursor(0, 240-120);
+    M5.Lcd.setTextSize(3);
+    num = cmd.toInt();
+    M5.Lcd.print(cmd+"  :"+num+"  ");
   }
-  M5.Lcd.setCursor(0, 240-120);
-  M5.Lcd.setTextSize(3);
-  M5.Lcd.print(cmd);
+
 
   //t
   
@@ -125,6 +146,7 @@ void checkBleMessage(){
   */
 }
 
+/*
 ///////////////
 // LCD Color //
 ///////////////
@@ -171,3 +193,4 @@ void loopLCDcolor() {
     updateColor = false;
   }
 }
+*/
