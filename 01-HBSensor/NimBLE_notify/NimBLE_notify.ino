@@ -16,6 +16,14 @@
 #include <M5Core2.h>
 #include <NimBLEDevice.h>
 
+#include <Wire.h>
+#include "MAX30100_PulseOximeter.h"
+
+#define REPORTING_PERIOD_MS     100
+
+PulseOximeter pox;
+uint32_t tsLastReport = 0;
+
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
 
@@ -26,16 +34,16 @@ unsigned long now = 0;
 unsigned long last = 0;
 
 String id = "";
-String myValue;
-String raw[10] = {"\0"};// H,S,I for 50 pixels
-int state = 0;
+int batteryCounter = 0;
+int batteryCounterLimit = 10000;
 
 void setup() {
   M5.begin();
   setupId();
   //Serial.begin(115200);
-  xTaskCreatePinnedToCore(task, "Task", 4096, NULL, 1, NULL, 1);
+  //xTaskCreatePinnedToCore(task, "Task", 4096, NULL, 1, NULL, 1);
   setupBT();
+  setupHB();
 }
 
 void task(void* arg) {
@@ -46,19 +54,35 @@ void task(void* arg) {
   }
 }
 
-void process(){
-    Serial.println("Process:"+myValue);
-
-    int l = split(myValue, ',',raw);
-
-    Serial.println("State:"+raw[0]);
-    state = raw[0].toInt(); 
-}
-
 void loop() {
-  showBatteryLevel();
+
+  
+  if(batteryCounter>batteryCounterLimit){
+    batteryCounter = 0;
+    showBatteryLevel();
+  }
+  batteryCounter++;
+  
+
+  // Make sure to call update as fast as possible
+  pox.update();
+  
+  // Asynchronously dump heart rate and oxidation levels to the serial
+  // For both, a value of 0 means "invalid"
+  if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
+    Serial.print("Heart rate:");
+    Serial.print(pox.getHeartRate());
+    Serial.print("bpm / SpO2:");
+    Serial.print(pox.getSpO2());
+    Serial.println("%");
+  
+    tsLastReport = millis();
+  }
+  
   showId();
   showFps();
-  showState();
-  delay(300);//around 10fps
+
+  //notify();
+
+  //delay(1000);//around 10fps
 }
