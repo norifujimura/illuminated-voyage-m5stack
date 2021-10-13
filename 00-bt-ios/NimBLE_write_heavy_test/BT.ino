@@ -31,7 +31,7 @@ class MyCallbacks: public BLECharacteristicCallbacks {
 };
 
 void setupBT(){
-  
+  BLEDevice::setMTU(512);
   BLEDevice::init(id.c_str());
   BLEServer *pServer = BLEDevice::createServer();
 

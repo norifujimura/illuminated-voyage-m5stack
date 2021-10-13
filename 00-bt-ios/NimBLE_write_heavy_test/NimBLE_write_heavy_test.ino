@@ -32,33 +32,35 @@ int state = 0;
 
 void setup() {
   M5.begin();
+  M5.Lcd.clear(); 
   setupId();
   //Serial.begin(115200);
   xTaskCreatePinnedToCore(task, "Task", 4096, NULL, 1, NULL, 1);
   setupBT();
+  
 }
 
 void task(void* arg) {
   int cnt = 0;
   while (1) {
-    printf("task thread_cnt=%ld\n", cnt++);
-    delay(200);
+    //printf("task thread_cnt=%ld\n", cnt++);
+    //showId();
+    updateBatteryLevel();
+    delay(1000);
   }
 }
 
 void process(){
     Serial.println("Process:"+myValue);
-
     int l = split(myValue, ',',raw);
-
     Serial.println("State:"+raw[0]);
     state = raw[0].toInt(); 
 }
 
 void loop() {
-  showBatteryLevel();
   showId();
+  showBatteryLevel();
   showFps();
   showState();
-  delay(300);//around 10fps
+  delay(150);//around 10fps
 }
