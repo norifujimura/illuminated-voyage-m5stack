@@ -70,6 +70,28 @@ void send(){
   }
 }
 
+void send(String t){
+  String buf = t;
+  
+    if(connected){
+        //Send a packet
+    udp.beginPacket(udpAddress,udpPort);
+    /*
+    udp.printf("Seconds since boot: %lu", millis()/1000);
+    */
+        int i = 0;
+    while( buf.length() > i){
+      char temp = buf.charAt(i);
+      udp.write(temp);
+      i++;
+    }
+    udp.endPacket();
+    Serial.print("Sent:"+ t + ",");
+  }
+}
+
+
+
 void read(){
     if(connected){
     char packetBuffer[255];

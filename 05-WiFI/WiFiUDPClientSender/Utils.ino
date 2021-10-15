@@ -39,8 +39,8 @@ void updateBatteryLevel(){
 void showBatteryLevel(){
   int i = (int) batteryPercentage;
   String s = String("Battery:")+String(batteryPercentage ).c_str()+String("%");
-  M5.Lcd.setCursor(0, 240-30);
-  M5.Lcd.setTextSize(2);
+  M5.Lcd.setCursor(0, 240-20);
+  M5.Lcd.setTextSize(1);
   M5.Lcd.print(s);
   M5.Lcd.progressBar(0, 240-10, 320, 20, i); 
 }
@@ -52,22 +52,22 @@ void showFps(){
   float fps = 1000.0 / (float) diff;
   int ifps = (int)fps;
   String s = String("LoopFPS:")+String(ifps).c_str()+String("fps  ")+String(now);
-  M5.Lcd.setCursor(0, 240-80);
-  M5.Lcd.setTextSize(2);
+  M5.Lcd.setCursor(0, 240-30);
+  M5.Lcd.setTextSize(1);
   M5.Lcd.print(s);
 }
 
 void showId(){
   String s = String("ID:")+id;
-  M5.Lcd.setCursor(0, 240-120);
-  M5.Lcd.setTextSize(2);
+  M5.Lcd.setCursor(0, 240-40);
+  M5.Lcd.setTextSize(1);
   M5.Lcd.print(s);
 }
 
 void showIp(){
   String s = String("IP:")+ip;
-  M5.Lcd.setCursor(0, 240-160);
-  M5.Lcd.setTextSize(2);
+  M5.Lcd.setCursor(0, 240-50);
+  M5.Lcd.setTextSize(1);
   M5.Lcd.print(s);
 }
 
