@@ -13,26 +13,15 @@
 const char * networkName = "akiko_network";
 const char * networkPswd = "akobagus";
 
-
 /*
 const char * networkName = "voyager";
 const char * networkPswd = "fujimura";
 */
-
-
-//IP address to send UDP data to:
-// either use the ip address of the server or 
-// a network broadcast address
-//const char * udpAddress = "172.20.10.1";
-//const char * udpAddress = "192.168.86.239";
-const int udpPort = 9999;
+int port = 9999;
 
 //Are we currently connected?
 boolean connected = false;
-
-//The udp library class
 WiFiUDP udp;
-
 char packetBuffer[1024]; //buffer to hold incoming packet
 
 //App
@@ -48,6 +37,8 @@ void setup(){
   M5.begin();
   M5.Lcd.clear(); 
   setupId();
+  setupPort();
+  
     //Connect to the WiFi network
   connectToWiFi(networkName, networkPswd);
   
@@ -81,6 +72,7 @@ void loop(){
   showFps();
   showId();
   showIp();
+  showPort();
   showBatteryLevel();
 }
 
@@ -106,50 +98,6 @@ void read(){
 
       Serial.println("Contents:");
       Serial.println(packetBuffer);
-
-      //send();
-      /*
-      udp.beginPacket(udp.remoteIP(), udp.remotePort());
-      udp.write(ReplyBuffer);
-      udp.endPacket();
-      */
     }
   }
-}
-
-void connectToWiFi(const char * ssid, const char * pwd){
-  ip = "";
-  Serial.println("Connecting to WiFi network: " + String(ssid));
-
-  // delete old config
-  WiFi.disconnect(true);
-  //register event handler
-  WiFi.onEvent(WiFiEvent);
-  
-  //Initiate connection
-  WiFi.begin(ssid, pwd);
-
-  Serial.println("Waiting for WIFI connection...");
-}
-
-//wifi event handler
-void WiFiEvent(WiFiEvent_t event){
-    switch(event) {
-      case SYSTEM_EVENT_STA_GOT_IP:
-          //When connected set 
-          Serial.print("WiFi connected! IP address: ");
-          Serial.println(WiFi.localIP());  
-          ip = WiFi.localIP().toString();
-          //initializes the UDP state
-          //This initializes the transfer buffer
-          udp.begin(WiFi.localIP(),udpPort);
-          connected = true;
-          break;
-      case SYSTEM_EVENT_STA_DISCONNECTED:
-          Serial.println("WiFi lost connection");
-          connected = false;
-          connectToWiFi(networkName, networkPswd);
-          break;
-      default: break;
-    }
 }

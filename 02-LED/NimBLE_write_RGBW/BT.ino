@@ -38,6 +38,11 @@ void process(){
     int l = split(myValue, ',',raw);
 
     Serial.println("State:"+raw[0]);
+    if(state == 16){
+      
+    }else{
+      lastState = state;
+    }
     state = raw[0].toInt(); 
     isUpdated = true;
 }

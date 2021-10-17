@@ -18,7 +18,6 @@
 
 #include <Wire.h>
 #include "MAX30100_PulseOximeter.h"
-
 #define REPORTING_PERIOD_MS     100
 
 PulseOximeter pox;

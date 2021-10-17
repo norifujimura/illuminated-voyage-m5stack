@@ -25,11 +25,12 @@
 unsigned long now = 0;
 unsigned long last = 0;
 
-String id = "01";
+String id = "03";
 String myValue;
 String raw[10] = {"\0"};// H,S,I for 50 pixels
 
 int state = 0;
+int lastState = 0;
 int batteryCounter = 0;
 int batteryCounterLimit = 10000;
 
@@ -46,57 +47,51 @@ void task(void* arg) {
   int cnt = 0;
   while (1) {
     printf("task thread_cnt=%ld\n", cnt++);
-    delay(200);
+    updateBatteryLevel();
+    delay(1000);
   }
 }
 
-
-
 void loop() {
 
-  if(batteryCounter>batteryCounterLimit){
-    batteryCounter = 0;
-    showBatteryLevel();
-  }
-  batteryCounter++;
-  
   showId();
   showFps();
   showState();
+  showBatteryLevel();
 
   if(state == 0){
-    colorWipeTwo(200,100,100,0,50);
+    colorWipeTwo(200,50,50,0,50);
   }
   if(state == 1){
-    colorWipeTwo(200,100,100,0,15);
+    colorWipeTwo(200,50,50,0,15);
   }
   
   if(state == 2){
-    colorWipeTwo(170,150,150,0,50);
+    colorWipeTwo(170,100,100,0,50);
   }
   if(state == 3){
-    colorWipeTwo(170,150,150,0,15);
+    colorWipeTwo(170,100,100,0,15);
   }
 
   if(state == 4){
-    colorWipeTwo(200,100,200,0,50);
+    colorWipeTwo(200,50,200,0,50);
   }
   if(state == 5){
-    colorWipeTwo(200,100,200,0,15);
+    colorWipeTwo(200,50,200,0,15);
   }
 
   if(state == 6){
-    colorWipeTwo(100,100,200,0,50);
+    colorWipeTwo(50,50,200,0,50);
   }
   if(state == 7){
-    colorWipeTwo(100,100,200,0,15);
+    colorWipeTwo(50,50,200,0,15);
   }
 
   if(state == 8){
-    colorWipeTwo(100,150,200,0,50);
+    colorWipeTwo(50,100,200,0,50);
   }
   if(state == 9){
-    colorWipeTwo(100,150,200,0,15);
+    colorWipeTwo(50,100,200,0,15);
   }
 
   if(state == 10){

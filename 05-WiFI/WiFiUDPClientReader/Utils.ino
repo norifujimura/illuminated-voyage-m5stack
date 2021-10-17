@@ -26,6 +26,21 @@ void setupId(){
   }
 }
 
+void setupPort(){
+  if(id == "00"){
+    port = 9999;
+  }
+  if(id == "01"){
+    port = 1111;
+  }
+  if(id == "02"){
+    port = 2222;
+  }
+  if(id == "03"){
+    port = 3333;
+  }
+}
+
 float batteryPercentage;
 
 void updateBatteryLevel(){
@@ -72,7 +87,7 @@ void showIp(){
 }
 
 void showPort(){
-  String s = String("Port:")+String(udpPort);
+  String s = String("Port:")+String(port);
   M5.Lcd.setCursor(0, 240-60);
   M5.Lcd.setTextSize(1);
   M5.Lcd.print(s);
@@ -125,7 +140,10 @@ int split(String data, char delimiter, String *dst){
     //return dst;
 }
 
+/*
 int splitFour(String data, char delimiter, int *r,int *g,int *b,int *w){
+
+    String
 
     int index = 0;
     int arraySize = (sizeof(data)/sizeof((data)[0]));  
@@ -147,3 +165,4 @@ int splitFour(String data, char delimiter, int *r,int *g,int *b,int *w){
     return (index + 1);
     //return dst;
 }
+*/

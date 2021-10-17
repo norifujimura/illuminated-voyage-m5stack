@@ -154,9 +154,10 @@ void pulseBase(uint8_t wait) {
 }
 
 void pulse(uint8_t wait) {
-  for(int j=64; j<127; j++) { // Ramp up from 0 to 255
+  
+  for(int j=0; j<84; j++) { // Ramp up from 0 to 255
     // Fill entire strip with white at gamma-corrected brightness level 'j':
-    strip.fill(strip.Color(strip.gamma8(j/2), strip.gamma8(j/2), 0, strip.gamma8(j*2)));
+    strip.fill(strip.Color(strip.gamma8(j), strip.gamma8(j), 0, strip.gamma8(j*3)));
     if(isUpdated){
       isUpdated = false;
       return;
@@ -165,8 +166,8 @@ void pulse(uint8_t wait) {
     delay(wait);
   }
 
-  for(int j=127; j>=64; j--) { // Ramp down from 255 to 0
-    strip.fill(strip.Color(strip.gamma8(j/2), strip.gamma8(j/2), 0, strip.gamma8(j*2)));
+  for(int j=84; j>=0; j--) { // Ramp down from 255 to 0
+    strip.fill(strip.Color(strip.gamma8(j), strip.gamma8(j), 0, strip.gamma8(j*3)));
     if(isUpdated){
       isUpdated = false;
       return;
@@ -175,11 +176,11 @@ void pulse(uint8_t wait) {
     delay(wait);
   }
 
-  state = 17; //pulseBase
+  state = lastState;
 }
 
 void pulseWhite(uint8_t wait) {
-  for(int j=0; j<256; j++) { // Ramp up from 0 to 255
+  for(int j=0; j<255; j++) { // Ramp up from 0 to 255
     // Fill entire strip with white at gamma-corrected brightness level 'j':
     strip.fill(strip.Color(0, 0, 0, strip.gamma8(j)));
     if(isUpdated){

@@ -26,20 +26,21 @@ void setupId(){
   }
 }
 
-void showBatteryLevel(){
-  if((now % 1000) < 100){
-     Serial.println("showBettryLevel");
-  }else{
-    return;
-  }
-  //https://community.m5stack.com/topic/2994/core2-how-to-know-the-current-battery-level/4
-  float batVoltage = M5.Axp.GetBatVoltage();
-  float batPercentage = ( batVoltage < 3.2 ) ? 0 : ( batVoltage - 3.2 ) * 100;
-  String s = String("Battery:")+String(batPercentage ).c_str()+String("%");
+float batteryPercentage;
+
+void updateBatteryLevel(){
+    //https://community.m5stack.com/topic/2994/core2-how-to-know-the-current-battery-level/4
+  float batteryVoltage = M5.Axp.GetBatVoltage();
+  batteryPercentage = ( batteryVoltage < 3.2 ) ? 0 : ( batteryVoltage - 3.2 ) * 100;
+  
    //M5.Lcd.drawString(s, 0, 100, 1); 
-  int i = (int) batPercentage;
-  M5.Lcd.setCursor(0, 240-30);
-  M5.Lcd.setTextSize(2);
+}
+
+void showBatteryLevel(){
+  int i = (int) batteryPercentage;
+  String s = String("Battery:")+String(batteryPercentage ).c_str()+String("%");
+  M5.Lcd.setCursor(0, 240-20);
+  M5.Lcd.setTextSize(1);
   M5.Lcd.print(s);
   M5.Lcd.progressBar(0, 240-10, 320, 20, i); 
 }
