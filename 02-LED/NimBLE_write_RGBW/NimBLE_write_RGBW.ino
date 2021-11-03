@@ -38,7 +38,7 @@ void setup() {
   M5.begin();
   //setupId();
   //Serial.begin(115200);
-  //xTaskCreatePinnedToCore(task, "Task", 4096, NULL, 1, NULL, 1);
+  xTaskCreatePinnedToCore(task, "Task", 4096, NULL, 1, NULL, 1);
   setupBT();
   setupLED();
 }
