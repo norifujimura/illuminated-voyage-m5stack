@@ -19,8 +19,10 @@
 
 #include <Adafruit_NeoPixel.h>
 #define LED_PIN   32
-#define LED_COUNT 150
-#define BRIGHTNESS 64// Set BRIGHTNESS to about 1/4 (max = 255)
+//#define LED_COUNT 288
+#define LED_COUNT 120//60 *2
+//#define BRIGHTNESS 64// Set BRIGHTNESS to about 1/4 (max = 255)
+#define BRIGHTNESS 200
 #define id "03"
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRBW + NEO_KHZ800);
 
@@ -327,6 +329,7 @@ void colorWipe(uint32_t color, int wait) {
 void colorWipeTwo(int r,int g,int b,int w, int wait) {
 
   for(int i=0; i<strip.numPixels(); i++) { // For each pixel in strip...
+  //for(int i=0; i<LED_COUNT;i++){
     int counter = 0;
     for(int j=i; j>0; j--) {
       int rTwo = r-counter;
@@ -348,7 +351,10 @@ void colorWipeTwo(int r,int g,int b,int w, int wait) {
 
       uint32_t  c = strip.Color(  rTwo,   gTwo,   bTwo, wTwo);
       strip.setPixelColor(j, c);         //  Set pixel's color (in RAM)
-      counter++;
+      //counter++;
+
+      int step = 288/strip.numPixels();
+      counter+=step;
     }
 
     strip.show();                          //  Update strip to match

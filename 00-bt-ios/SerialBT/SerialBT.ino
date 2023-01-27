@@ -39,7 +39,7 @@ void loop() {
     SerialBT.println("Response:"+rcv);
     Serial.write(SerialBT.read());
   }
-  //showBatteryLevel();
+  showBatteryLevel();
   SerialBT.println("Alive:");
   delay(10);
 }

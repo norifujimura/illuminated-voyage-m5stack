@@ -7,7 +7,7 @@ void setup() {
   unsigned int auiCnt = 0;
   M5.begin();
   M5.Lcd.setTextSize(2);
-  File f = SD.open("/id.txt");
+  File f = SD.open("/daigo-kikuchi.txt");
     if (f) {
     M5.Lcd.println("File open successful");
     // ファイルサイズ取得

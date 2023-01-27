@@ -6,7 +6,6 @@
 //const int udpPort = 4444;
 int udpPort = 9999;
 
-
 //Are we currently connected?
 boolean connected = false;
 
